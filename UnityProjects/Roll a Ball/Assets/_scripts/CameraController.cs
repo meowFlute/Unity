@@ -4,6 +4,7 @@ using System.Collections;
 public class CameraController : MonoBehaviour {
 
 	public GameObject player;
+    public float rotateSpeed;
 	private Vector3 offsetValue;
 
 	// Use this for initialization

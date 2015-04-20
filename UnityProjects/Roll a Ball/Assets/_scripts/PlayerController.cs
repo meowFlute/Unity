@@ -8,9 +8,13 @@ public class PlayerController : MonoBehaviour {
 	public float thrust;
 	public float friction;
 	private Rigidbody rb;
-	private int score;
+	public int score;
 	public Text scoreText;
-	public Text winMessage;
+    public Slider scoreSlider;
+    public Transform nextLevelButton;
+    public Transform quitButton;
+    public Text nextLevelButtonText;
+    public Text quitButtonText;
 	#endregion
 
 	// Use this for initialization
@@ -20,7 +24,11 @@ public class PlayerController : MonoBehaviour {
 		rb.drag = friction;
 		score = 0;
 		SetScoreText ();
-		winMessage.text = "";
+        //set the buttons to a deactivated state with no text
+        nextLevelButtonText.text = "";
+        quitButtonText.text = "";
+        nextLevelButton.GetComponent<Button>().interactable = false;
+        quitButton.GetComponent<Button>().interactable = false;
 	}
 	
 	// Update is called once per frame
@@ -31,6 +39,11 @@ public class PlayerController : MonoBehaviour {
 		Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
 
 		rb.AddForce (movement*thrust);
+
+        if (Input.GetKeyDown("escape"))
+        {
+            QuitGame();
+        }
 	}
 
 	void OnTriggerEnter(Collider other) 
@@ -47,9 +60,24 @@ public class PlayerController : MonoBehaviour {
 	void SetScoreText()
 	{
 		scoreText.text = "Score: " + score.ToString ();
-		if (score >= 15) 
-		{
-			winMessage.text = "WINNER, WINNER, CHICKEN DINNER!!";
-		}
+        scoreSlider.value = score;
+
+        if (score >= scoreSlider.maxValue)
+        {
+            nextLevelButtonText.text = "GO TO NEXT LEVEL";
+            quitButtonText.text = "QUIT";
+            nextLevelButton.GetComponent<Button>().interactable = true;
+            quitButton.GetComponent<Button>().interactable = true;
+        }
 	}
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+    public void GoTo_NextLevel()
+    {
+        Application.LoadLevel(Application.loadedLevel + 1);
+    }
 }
